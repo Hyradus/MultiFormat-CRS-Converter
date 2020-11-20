@@ -22,12 +22,11 @@ from ipywidgets import IntProgress
 import geopandas as gpd
 
 
-
 def converter(file, OUT_CRS):
     
     xt = file.split('.')[1]
     name = os.path.basename(file)
-    outfile = DST_PATH+'/'+xt+'/'+ name
+    outfile = WORK_PATH+'/'+xt+'/'+ name
     if xt in['shp','SHP','gpkg','GPKG']:
         gdf = gpd.read_file(file)
         src_crs = gdf.crs
@@ -68,11 +67,10 @@ def main():
     for file in all_files:
         pathname, exten = os.path.splitext(file) 
         extensions.add(exten)
-
     for exts in extensions:
         exts=exts.split('.')[1]
         print(exts)
-        make_folder(DST_PATH, exts)
+        make_folder(WORK_PATH, exts)
         
     
     # Check available resources
@@ -127,23 +125,19 @@ if __name__ == "__main__":
     OUT_CRS = args.crs
 
     ## PATHS
+    #WORK_PATH = '/media/gnodj/W-DATS/Projects/ANALOG-1-Miracles/test_gdaltools/results'
     if WORK_PATH is None:
         root = Tk()
         root.withdraw()
         WORK_PATH = filedialog.askdirectory(parent=root,initialdir=os.getcwd(),title="Select output folder")
         print('Output folder:', WORK_PATH)
 
-    
-
+    #DATA_PATH = '/media/gnodj/W-DATS/Projects/ANALOG-1-Miracles/test_gdaltools'        
     if DATA_PATH is None:
         root = Tk()
         root.withdraw()
         DATA_PATH = filedialog.askdirectory(parent=root,initialdir=os.getcwd(),title="Select input files folder")
         print('Input files folder:', DATA_PATH)
-    
-    orig_dir = os.path.basename(DATA_PATH)
-    DST_PATH = WORK_PATH+'/'+orig_dir    
-    make_folder(WORK_PATH, orig_dir)
     
     OUT_CRS = '+proj=utm +zone=33 +datum=WGS84 +units=m +no_defs'
     if OUT_CRS is None:
