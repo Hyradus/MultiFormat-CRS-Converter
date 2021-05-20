@@ -15,6 +15,7 @@ import shutil
 import rasterio as rio
 from rasterio.warp import calculate_default_transform, reproject, Resampling
 from GenUtils import make_folder
+from pyproj import CRS
 
 def converter(file, dst_path, folder, OUT_CRS):
     xt = file.split('.')
@@ -82,9 +83,10 @@ def vectorReproj(srcfile, dstfile, dst_crs):
                 cr.write(crs)
             
         
-def rasterReproj(srcfile, dstfile, dst_crs):
+def rasterReproj(srcfile, dstfile, user_crs):
     basepath = os.path.dirname(dstfile)
     basename = os.path.basename(dstfile)
+    dst_crs = CRS.from_user_input(user_crs)
     wkt_file =dstfile.split('.')[0]+'.wkt'
     with rio.open(srcfile) as src:
         transform, width, height = calculate_default_transform(
